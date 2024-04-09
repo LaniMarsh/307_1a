@@ -18,12 +18,12 @@ function Form(props) {
     if (name === "job")
       setPerson({ name: person["name"], job: value });
     else setPerson({ name: value, job: person["job"] });
-}
+  }
 
   return (
     <form>
-      <label htmlFor="name">Name</label>
       <input type="button" value="Submit" onClick={submitForm} />
+      <label htmlFor="name">Name</label>
       <input
         type="text"
         name="name"

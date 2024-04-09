@@ -7,11 +7,10 @@ function MyApp() {
 
   const [characters, setCharacters] = useState([
     {
-      name: "Charlie",
-      job: "Janitor"
-    } 
+      name: "",
+      job: ""
+    }
   ]);
-
 
   function removeOneCharacter(index) {
     const updated = characters.filter((character, i) => {
@@ -21,7 +20,7 @@ function MyApp() {
   }
 
   function updateList(person) {
-    setCharacters([characters, person]);
+    setCharacters([...characters, person]);
   }
 
   return (
