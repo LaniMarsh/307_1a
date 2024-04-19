@@ -1,10 +1,13 @@
 // backend.js
 import express from "express";
+import cors from "cors";
 
 const app = express();
 const port = 8000;
 
+app.use(cors());
 app.use(express.json());
+
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -59,7 +62,12 @@ const users = {
       result = { users_list: result };
       res.send(result);
     } else {
-      res.send(users);
+      const modifiedUsersList = users["users_list"].map((user) => ({
+        id: user.id,
+        name: user.name,
+        job: user.job,
+      }));
+      res.send({ users_list: modifiedUsersList });
     }
   });
 
@@ -86,14 +94,20 @@ app.get("/users/:id", (req, res) => {
 const deleteUserById = (id) => {
     const index = users["users_list"].findIndex((user) => user.id === id);
     if (index !== -1) {
-      users["users_list"].splice(index, 1);
-    }
+        users["users_list"].splice(index, 1);
+        return true; 
+      }
+      return false;
   };
   
   app.delete("/users/:id", (req, res) => {
     const id = req.params.id;
-    deleteUserById(id);
-    res.send(users);
+    const deletedUser = deleteUserById(id); 
+    if (deletedUser) {
+        res.status(204).send(); 
+    } else {
+        res.status(404).send("User not found."); 
+    }
   });
 
 app.listen(port, () => {
@@ -102,13 +116,19 @@ app.listen(port, () => {
   );
 });
 
+const generateID = () => {
+    return Math.random().toString(36).substr(2, 9); 
+  };
+
 const addUser = (user) => {
-    users["users_list"].push(user);
+    const id = generateID();
+    const newUser = {...user, id};
+    users["users_list"].push(newUser);
     return user;
   };
   
   app.post("/users", (req, res) => {
     const userToAdd = req.body;
-    addUser(userToAdd);
-    res.send();
+    const newUser = addUser(userToAdd);
+    res.status(201).send(newUser);
   });
