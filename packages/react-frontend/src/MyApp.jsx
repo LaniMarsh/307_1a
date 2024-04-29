@@ -1,4 +1,4 @@
-// src/MyApp.jsx
+//  src/MyApp.jsx
 import React, { useState, useEffect } from "react";
 import Table from "./Table";
 import Form from "./Form";
@@ -6,6 +6,11 @@ import Form from "./Form";
 
 function MyApp() {
   const [characters, setCharacters] = useState([]);
+
+  function fetchUsers() { 
+    const promise = fetch("http://localhost:8000/users");
+    return promise;
+  }
 
   function removeOneCharacter(index) {
     const id = characters[index]._id;
@@ -25,20 +30,6 @@ function MyApp() {
     })
       .catch(() => {console.log("Could not delete user");});
   }
-
-  function updateList(person) 
-  {
-    postUser(person)
-      .then((res) => {if (res.status == 201) return res.json()})
-      .then((json) => {if (json) setCharacters([...characters, json])})
-      .catch((error) => { console.log(error); }
-      )
-  }
-
-  function fetchUsers() { 
-    const promise = fetch("http://localhost:8000/users");
-    return promise;
-}
 
   useEffect(() => {
     fetchUsers()
@@ -60,6 +51,15 @@ function MyApp() {
     );
 
       return promise;
+  }
+
+  function updateList(person) 
+  {
+    postUser(person)
+      .then((res) => {if (res.status == 201) return res.json()})
+      .then((json) => {if (json) setCharacters([...characters, json])})
+      .catch((error) => { console.log(error); }
+      )
   }
 
 
