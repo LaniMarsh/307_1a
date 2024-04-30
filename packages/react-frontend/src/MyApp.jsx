@@ -52,7 +52,7 @@ function MyApp() {
 
       return promise;
   }
-
+// why isnt it pushing to git
   function updateList(person) 
   {
     postUser(person)
